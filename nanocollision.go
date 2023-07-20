@@ -71,7 +71,7 @@ func main() {
 		nanoDiffZeroCount, float64(nanoDiffZeroCount)*100.0/float64(*longerZeroTest),
 	)
 
-	fmt.Printf("\nstarting parallel test %d goroutines x %d samples ...",
+	fmt.Printf("\nstarting parallel test %d goroutines x %d samples ...\n",
 		*goroutines, *longerZeroTest)
 	results := make(chan *roaring64.Bitmap)
 	for i := 0; i < *goroutines; i++ {
@@ -84,15 +84,17 @@ func main() {
 		next := <-results
 
 		numCollisions := next.AndCardinality(total)
-		fmt.Printf("%d samples; %d collisions\n", next.GetCardinality(), numCollisions)
+		fmt.Printf("%d samples from a thread; %d collisions inside the thread; %d collisions with other threads\n",
+			next.GetCardinality(), *longerZeroTest-int(next.GetCardinality()), numCollisions)
 		if numCollisions > 0 {
-			fmt.Printf("%d collisions\n", numCollisions)
 			totalCollisions += int(numCollisions)
 		}
 		total.Or(next)
 	}
-	fmt.Printf("%d final samples; %d total collisions; %d alternate calculation\n",
-		total.GetCardinality(), totalCollisions, *goroutines**longerZeroTest-int(total.GetCardinality()),
+	fmt.Printf("%d final samples; %d total collisions = %f%%; possible duplicate collisions? %d\n",
+		total.GetCardinality(), totalCollisions,
+		float64(totalCollisions)*100.0/float64(*goroutines**longerZeroTest),
+		totalCollisions-(*goroutines**longerZeroTest-int(total.GetCardinality())),
 	)
 }
 
