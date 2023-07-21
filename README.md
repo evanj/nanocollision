@@ -2,9 +2,11 @@
 
 How often do nanosecond counters collide? Often! See [my blog post for details](https://www.evanjones.ca/nanosecond-collisions.html).
 
-Go's `time.Now()` API records both the "absolute" time as well as a "monotonic clock" for relative time. See [the Go time package documentation for details](https://pkg.go.dev/time).
+Go's `time.Now()` API records both the "absolute" time as well as a "monotonic clock" for relative time, so this compares both. See [the Go time package documentation for details](https://pkg.go.dev/time). I also wrote a C program that uses `clock_getres` as a comparison. Scroll down for example output and details. On Linux, `clock_getres` reports that all timers have 1 ns resolution. On Mac OS X, it reports 1 us resolution, except for CLOCK_MONOTONIC_RAW which has a 42 ns resolution.
 
 ## Example output
+
+### Linux
 
 From a Linux system running Ubuntu 23.04, kernel version 6.2.0-25-generic, on real non-virtualized hardware "11th Gen Intel(R) Core(TM) i5-1135G7 @ 2.40GHz"
 
@@ -135,4 +137,350 @@ starting parallel test 8 goroutines x 10000000 samples ...
 10000000 samples from a thread; 0 collisions inside the thread; 1099527 collisions with other threads
 75509675 final samples; 4490325 total collisions = 5.612906%; possible duplicate collisions? 0
 
+```
+
+
+### Mac OS X Output
+
+From an M1 Max running OS X 13.4.1, and truncated a bit because it is too long.
+
+```
+1: 1689954854062410000: timeDiff=42; nanoDiff=0
+2: 1689954854062410000: timeDiff=41; nanoDiff=0
+3: 1689954854062410000: timeDiff=42; nanoDiff=0
+4: 1689954854062410000: timeDiff=42; nanoDiff=0
+5: 1689954854062410000: timeDiff=41; nanoDiff=0
+6: 1689954854062410000: timeDiff=42; nanoDiff=0
+7: 1689954854062410000: timeDiff=42; nanoDiff=0
+8: 1689954854062410000: timeDiff=41; nanoDiff=0
+9: 1689954854062410000: timeDiff=42; nanoDiff=0
+10: 1689954854062411000: timeDiff=42; nanoDiff=1000
+11: 1689954854062411000: timeDiff=41; nanoDiff=0
+12: 1689954854062411000: timeDiff=42; nanoDiff=0
+13: 1689954854062411000: timeDiff=42; nanoDiff=0
+14: 1689954854062411000: timeDiff=41; nanoDiff=0
+15: 1689954854062411000: timeDiff=42; nanoDiff=0
+16: 1689954854062411000: timeDiff=42; nanoDiff=0
+17: 1689954854062411000: timeDiff=0; nanoDiff=0
+18: 1689954854062411000: timeDiff=41; nanoDiff=0
+19: 1689954854062411000: timeDiff=84; nanoDiff=0
+20: 1689954854062411000: timeDiff=0; nanoDiff=0
+21: 1689954854062411000: timeDiff=83; nanoDiff=0
+22: 1689954854062411000: timeDiff=0; nanoDiff=0
+23: 1689954854062411000: timeDiff=83; nanoDiff=0
+24: 1689954854062411000: timeDiff=0; nanoDiff=0
+25: 1689954854062411000: timeDiff=84; nanoDiff=0
+26: 1689954854062411000: timeDiff=0; nanoDiff=0
+27: 1689954854062411000: timeDiff=41; nanoDiff=0
+28: 1689954854062411000: timeDiff=42; nanoDiff=0
+29: 1689954854062411000: timeDiff=42; nanoDiff=0
+30: 1689954854062411000: timeDiff=41; nanoDiff=0
+31: 1689954854062411000: timeDiff=42; nanoDiff=0
+32: 1689954854062411000: timeDiff=0; nanoDiff=0
+33: 1689954854062411000: timeDiff=83; nanoDiff=0
+34: 1689954854062411000: timeDiff=0; nanoDiff=0
+35: 1689954854062411000: timeDiff=84; nanoDiff=0
+36: 1689954854062412000: timeDiff=0; nanoDiff=1000
+37: 1689954854062412000: timeDiff=83; nanoDiff=0
+38: 1689954854062412000: timeDiff=0; nanoDiff=0
+39: 1689954854062412000: timeDiff=83; nanoDiff=0
+40: 1689954854062412000: timeDiff=0; nanoDiff=0
+41: 1689954854062412000: timeDiff=42; nanoDiff=0
+42: 1689954854062412000: timeDiff=42; nanoDiff=0
+43: 1689954854062412000: timeDiff=41; nanoDiff=0
+44: 1689954854062412000: timeDiff=42; nanoDiff=0
+45: 1689954854062412000: timeDiff=42; nanoDiff=0
+46: 1689954854062412000: timeDiff=41; nanoDiff=0
+47: 1689954854062412000: timeDiff=42; nanoDiff=0
+48: 1689954854062412000: timeDiff=42; nanoDiff=0
+49: 1689954854062412000: timeDiff=41; nanoDiff=0
+50: 1689954854062412000: timeDiff=42; nanoDiff=0
+51: 1689954854062412000: timeDiff=42; nanoDiff=0
+52: 1689954854062412000: timeDiff=41; nanoDiff=0
+53: 1689954854062412000: timeDiff=42; nanoDiff=0
+54: 1689954854062412000: timeDiff=42; nanoDiff=0
+55: 1689954854062412000: timeDiff=0; nanoDiff=0
+56: 1689954854062412000: timeDiff=41; nanoDiff=0
+57: 1689954854062412000: timeDiff=42; nanoDiff=0
+58: 1689954854062412000: timeDiff=42; nanoDiff=0
+59: 1689954854062412000: timeDiff=41; nanoDiff=0
+60: 1689954854062412000: timeDiff=42; nanoDiff=0
+61: 1689954854062413000: timeDiff=42; nanoDiff=1000
+62: 1689954854062413000: timeDiff=41; nanoDiff=0
+63: 1689954854062413000: timeDiff=42; nanoDiff=0
+64: 1689954854062413000: timeDiff=42; nanoDiff=0
+65: 1689954854062413000: timeDiff=41; nanoDiff=0
+66: 1689954854062413000: timeDiff=42; nanoDiff=0
+67: 1689954854062413000: timeDiff=42; nanoDiff=0
+68: 1689954854062413000: timeDiff=41; nanoDiff=0
+69: 1689954854062413000: timeDiff=0; nanoDiff=0
+70: 1689954854062413000: timeDiff=42; nanoDiff=0
+71: 1689954854062413000: timeDiff=42; nanoDiff=0
+72: 1689954854062413000: timeDiff=41; nanoDiff=0
+73: 1689954854062413000: timeDiff=42; nanoDiff=0
+74: 1689954854062413000: timeDiff=42; nanoDiff=0
+75: 1689954854062413000: timeDiff=41; nanoDiff=0
+76: 1689954854062413000: timeDiff=42; nanoDiff=0
+77: 1689954854062413000: timeDiff=42; nanoDiff=0
+78: 1689954854062413000: timeDiff=41; nanoDiff=0
+79: 1689954854062413000: timeDiff=42; nanoDiff=0
+80: 1689954854062413000: timeDiff=42; nanoDiff=0
+81: 1689954854062413000: timeDiff=41; nanoDiff=0
+82: 1689954854062413000: timeDiff=42; nanoDiff=0
+83: 1689954854062413000: timeDiff=42; nanoDiff=0
+84: 1689954854062413000: timeDiff=0; nanoDiff=0
+85: 1689954854062413000: timeDiff=41; nanoDiff=0
+86: 1689954854062413000: timeDiff=42; nanoDiff=0
+87: 1689954854062413000: timeDiff=42; nanoDiff=0
+88: 1689954854062414000: timeDiff=41; nanoDiff=1000
+89: 1689954854062414000: timeDiff=42; nanoDiff=0
+90: 1689954854062414000: timeDiff=42; nanoDiff=0
+91: 1689954854062414000: timeDiff=41; nanoDiff=0
+92: 1689954854062414000: timeDiff=42; nanoDiff=0
+93: 1689954854062414000: timeDiff=42; nanoDiff=0
+94: 1689954854062414000: timeDiff=41; nanoDiff=0
+95: 1689954854062414000: timeDiff=42; nanoDiff=0
+96: 1689954854062414000: timeDiff=42; nanoDiff=0
+97: 1689954854062414000: timeDiff=41; nanoDiff=0
+98: 1689954854062414000: timeDiff=0; nanoDiff=0
+99: 1689954854062414000: timeDiff=42; nanoDiff=0
+100: 1689954854062414000: timeDiff=42; nanoDiff=0
+113: 1689954854062415000: timeDiff=0; nanoDiff=1000
+1025: 1689954854062459000: timeDiff=4541; nanoDiff=4000
+2390: 1689954854062515000: timeDiff=1167; nanoDiff=1000
+3073: 1689954854062543000: timeDiff=1333; nanoDiff=1000
+3755: 1689954854062571000: timeDiff=1250; nanoDiff=1000
+printed the first 100 diffs, and diffs == 0 || >= 100ns; see --help for flags
+time diff distribution: count=4999 avg=42.2 min=0 p50=42 p90=42 p95=83 max=4541
+nano diff distribution: count=4999 avg=42.2 min=0 p50=0 p90=0 p95=0 max=5000
+
+running longer zeros test ...
+sampled 10000000 pairs; 2023599 time diff zeros = 20.235990%; 9613818 nano diff zeros = 96.138180%
+
+starting parallel test 10 goroutines x 10000000 samples ...
+816284 samples from a thread; 9183716 collisions inside the thread; 0 collisions with other threads
+821781 samples from a thread; 9178219 collisions inside the thread; 455881 collisions with other threads
+813481 samples from a thread; 9186519 collisions inside the thread; 565390 collisions with other threads
+819691 samples from a thread; 9180309 collisions inside the thread; 658627 collisions with other threads
+805853 samples from a thread; 9194147 collisions inside the thread; 701377 collisions with other threads
+822764 samples from a thread; 9177236 collisions inside the thread; 740862 collisions with other threads
+825620 samples from a thread; 9174380 collisions inside the thread; 787101 collisions with other threads
+814251 samples from a thread; 9185749 collisions inside the thread; 794170 collisions with other threads
+825603 samples from a thread; 9174397 collisions inside the thread; 813050 collisions with other threads
+827795 samples from a thread; 9172205 collisions inside the thread; 806668 collisions with other threads
+1869997 final samples; 6323126 total collisions = 6.323126%; possible duplicate collisions? -91806877
+```
+
+## clock_gettime_demo
+
+This calls `clock_getres` and `clock_gettime`` with three different clocks to try to make sure we are avoiding any Go specific weirdness.
+
+### Linux
+
+TODO: update with same system as above. Using `strace` shows this does not make system calls, so it should be using the Kernel's fast [VDSO API](https://man7.org/linux/man-pages/man7/vdso.7.html).
+
+```
+clock_getres(CLOCK_REALTIME, ...)=1 ns
+clock_getres(CLOCK_MONOTONIC, ...)=1 ns
+clock_getres(CLOCK_MONOTONIC_RAW, ...)=1 ns
+
+CLOCK_REALTIME 30 samples:
+1689955184084847577
+1689955184084847650 (diff=73)
+1689955184084847680 (diff=30)
+1689955184084847703 (diff=23)
+1689955184084847728 (diff=25)
+1689955184084847751 (diff=23)
+1689955184084847774 (diff=23)
+1689955184084847797 (diff=23)
+1689955184084847820 (diff=23)
+1689955184084847843 (diff=23)
+1689955184084847866 (diff=23)
+1689955184084847890 (diff=24)
+1689955184084847913 (diff=23)
+1689955184084847936 (diff=23)
+1689955184084847959 (diff=23)
+1689955184084847982 (diff=23)
+1689955184084848006 (diff=24)
+1689955184084848028 (diff=22)
+1689955184084848051 (diff=23)
+1689955184084848074 (diff=23)
+1689955184084848098 (diff=24)
+1689955184084848121 (diff=23)
+1689955184084848144 (diff=23)
+1689955184084848167 (diff=23)
+1689955184084848190 (diff=23)
+1689955184084848214 (diff=24)
+1689955184084848237 (diff=23)
+1689955184084848260 (diff=23)
+1689955184084848283 (diff=23)
+1689955184084848306 (diff=23)
+
+CLOCK_MONOTONIC 30 samples:
+1705631302570739
+1705631302570776 (diff=37)
+1705631302570798 (diff=22)
+1705631302570821 (diff=23)
+1705631302570845 (diff=24)
+1705631302570868 (diff=23)
+1705631302570891 (diff=23)
+1705631302570914 (diff=23)
+1705631302570937 (diff=23)
+1705631302570960 (diff=23)
+1705631302570983 (diff=23)
+1705631302571006 (diff=23)
+1705631302571029 (diff=23)
+1705631302571053 (diff=24)
+1705631302571076 (diff=23)
+1705631302571099 (diff=23)
+1705631302571122 (diff=23)
+1705631302571145 (diff=23)
+1705631302571168 (diff=23)
+1705631302571191 (diff=23)
+1705631302571214 (diff=23)
+1705631302571237 (diff=23)
+1705631302571261 (diff=24)
+1705631302571284 (diff=23)
+1705631302571307 (diff=23)
+1705631302571330 (diff=23)
+1705631302571353 (diff=23)
+1705631302571377 (diff=24)
+1705631302571399 (diff=22)
+1705631302571422 (diff=23)
+
+CLOCK_MONOTONIC_RAW 30 samples:
+1705609726388901
+1705609726388992 (diff=91)
+1705609726389022 (diff=30)
+1705609726389045 (diff=23)
+1705609726389069 (diff=24)
+1705609726389092 (diff=23)
+1705609726389115 (diff=23)
+1705609726389138 (diff=23)
+1705609726389162 (diff=24)
+1705609726389186 (diff=24)
+1705609726389210 (diff=24)
+1705609726389232 (diff=22)
+1705609726389256 (diff=24)
+1705609726389279 (diff=23)
+1705609726389303 (diff=24)
+1705609726389326 (diff=23)
+1705609726389350 (diff=24)
+1705609726389373 (diff=23)
+1705609726389397 (diff=24)
+1705609726389420 (diff=23)
+1705609726389444 (diff=24)
+1705609726389466 (diff=22)
+1705609726389490 (diff=24)
+1705609726389514 (diff=24)
+1705609726389538 (diff=24)
+1705609726389561 (diff=23)
+1705609726389584 (diff=23)
+1705609726389607 (diff=23)
+1705609726389631 (diff=24)
+1705609726389654 (diff=23)
+```
+
+### Mac OS X
+
+```
+clock_getres(CLOCK_REALTIME, ...)=1000 ns
+clock_getres(CLOCK_MONOTONIC, ...)=1000 ns
+clock_getres(CLOCK_MONOTONIC_RAW, ...)=42 ns
+
+CLOCK_REALTIME 30 samples:
+1689955300589484000
+1689955300589484000 (diff=0)
+1689955300589484000 (diff=0)
+1689955300589484000 (diff=0)
+1689955300589484000 (diff=0)
+1689955300589484000 (diff=0)
+1689955300589484000 (diff=0)
+1689955300589484000 (diff=0)
+1689955300589484000 (diff=0)
+1689955300589484000 (diff=0)
+1689955300589484000 (diff=0)
+1689955300589484000 (diff=0)
+1689955300589484000 (diff=0)
+1689955300589484000 (diff=0)
+1689955300589484000 (diff=0)
+1689955300589484000 (diff=0)
+1689955300589484000 (diff=0)
+1689955300589484000 (diff=0)
+1689955300589484000 (diff=0)
+1689955300589484000 (diff=0)
+1689955300589484000 (diff=0)
+1689955300589484000 (diff=0)
+1689955300589484000 (diff=0)
+1689955300589484000 (diff=0)
+1689955300589484000 (diff=0)
+1689955300589484000 (diff=0)
+1689955300589484000 (diff=0)
+1689955300589484000 (diff=0)
+1689955300589484000 (diff=0)
+1689955300589484000 (diff=0)
+
+CLOCK_MONOTONIC 30 samples:
+67337505901000
+67337505901000 (diff=0)
+67337505901000 (diff=0)
+67337505901000 (diff=0)
+67337505901000 (diff=0)
+67337505901000 (diff=0)
+67337505901000 (diff=0)
+67337505901000 (diff=0)
+67337505901000 (diff=0)
+67337505902000 (diff=1000)
+67337505902000 (diff=0)
+67337505902000 (diff=0)
+67337505902000 (diff=0)
+67337505902000 (diff=0)
+67337505902000 (diff=0)
+67337505902000 (diff=0)
+67337505902000 (diff=0)
+67337505902000 (diff=0)
+67337505902000 (diff=0)
+67337505902000 (diff=0)
+67337505902000 (diff=0)
+67337505902000 (diff=0)
+67337505902000 (diff=0)
+67337505902000 (diff=0)
+67337505902000 (diff=0)
+67337505902000 (diff=0)
+67337505902000 (diff=0)
+67337505902000 (diff=0)
+67337505902000 (diff=0)
+67337505902000 (diff=0)
+
+CLOCK_MONOTONIC_RAW 30 samples:
+67344405125375
+67344405125416 (diff=41)
+67344405125458 (diff=42)
+67344405125500 (diff=42)
+67344405125500 (diff=0)
+67344405125541 (diff=41)
+67344405125583 (diff=42)
+67344405125583 (diff=0)
+67344405125625 (diff=42)
+67344405125666 (diff=41)
+67344405125666 (diff=0)
+67344405125708 (diff=42)
+67344405125750 (diff=42)
+67344405125750 (diff=0)
+67344405125791 (diff=41)
+67344405125833 (diff=42)
+67344405125875 (diff=42)
+67344405125875 (diff=0)
+67344405125916 (diff=41)
+67344405125958 (diff=42)
+67344405125958 (diff=0)
+67344405126000 (diff=42)
+67344405126041 (diff=41)
+67344405126041 (diff=0)
+67344405126083 (diff=42)
+67344405126125 (diff=42)
+67344405126125 (diff=0)
+67344405126166 (diff=41)
+67344405126208 (diff=42)
+67344405126208 (diff=0)
 ```
